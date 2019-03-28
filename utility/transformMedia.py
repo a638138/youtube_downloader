@@ -4,6 +4,7 @@ import setting
 import glob
 import os
 import setting
+import re
 
 class transformMediaThread(QThread):
 
@@ -32,11 +33,13 @@ def mergeVideoAudio():
     output_path = '.\\output\\'
     audio = str([os.path.basename(x) for x in glob.glob(".\\temp\\Audio.*")][0])
     video = str([os.path.basename(x) for x in glob.glob(".\\temp\\Video.*")][0])
+    filetered_file_name = setting.fileName
+    filetered_file_name = re.sub(r'[\/:*?"<>|]', ' ', filetered_file_name)
 
-    cmd = 'ffmpeg -i "{file_path}{audio_fileName}" -i "{file_path}{video_fileName}" \
-           -map 0:a  -map 1:v -c:v copy -c:a ac3 -b:a 320K "{output_path}{output_fileName}.mp4"' \
+    cmd = 'ffmpeg -i \"{file_path}{audio_fileName}\" -i \"{file_path}{video_fileName}\" \
+           -map 0:a  -map 1:v -c:v copy -c:a ac3 -b:a 320K {output_path}\\\"{output_fileName}.mp4\"' \
            .format(file_path=file_path, audio_fileName=audio, video_fileName=video, output_path=output_path, 
-                   output_fileName=setting.fileName)
+                   output_fileName=filetered_file_name)
 
     p = Popen(cmd)
     p.wait()
