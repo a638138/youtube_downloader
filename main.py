@@ -249,6 +249,8 @@ def extractTag(stream):
     return data
 
 if __name__ == '__main__':
+    os.system('mkdir output')
+    os.system('mkdir temp')
     app = QApplication(sys.argv)
     myWin = MyWindow()
     myWin.show()
