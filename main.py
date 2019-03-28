@@ -1,4 +1,3 @@
-import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QTextBrowser
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
@@ -10,6 +9,8 @@ from utility.transformMedia import transformMediaThread
 import setting
 import threading
 import urllib
+import glob
+import sys, os
 
 class MyWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -70,6 +71,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
     def download_mp4(self):
 
+        # 清除上次的暫存檔
+        lastFile = [os.path.basename(x) for x in glob.glob(".\\temp\\*")]
+        for name in lastFile:
+            os.remove('.\\temp\\{file_name}'.format(file_name=name))
+    
         self.closeAllGUI()
         # sldownloadOption
         bestVideo = self.getBestVideo(quality=1080)
@@ -198,7 +204,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             tempMimeType = self.downloadOption.item(index, 1).text()
             tempRes = self.downloadOption.item(index, 2).text()
             tempFps = self.downloadOption.item(index, 3).text()
-            print(tempMimeType)
+
             if tempFps == 'x' or tempRes == 'x' or tempMimeType != 'video/mp4':
                 continue
 

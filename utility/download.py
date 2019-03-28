@@ -30,11 +30,11 @@ class Download_thread(QThread):
         # 2為使用者從清單中自選
         if self.dataType == 0:
             file_name = 'Video'
-            outputPath = '.\\input'
+            outputPath = '.\\temp'
 
         elif self.dataType == 1:
             file_name = 'Audio'
-            outputPath = '.\\input'
+            outputPath = '.\\temp'
             setting.isNeedTransform = True
 
         else:
