@@ -34,13 +34,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         link = self.input.toPlainText()
         try:
             self.yt = YouTube(link, on_progress_callback=self.progress_Check)
+            self.closeAllGUI()
+            self.startParseLink(link, self.yt)
+            self.openAllGUI()
         except:
             self.info.setText('請檢查網路連線，並確認Youtube網址輸入正確')
             print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
             return
-        self.closeAllGUI()
-        self.startParseLink(link, self.yt)
-        self.openAllGUI()
+
+
 
     def tbDoubleClicked(self, mi):
         self.closeAllGUI()
@@ -154,6 +156,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         #         """.format(video_id)
         # self.preview.setHtml(htmlString, QUrl(baseUrl))
         title = yt.title
+        setting.fileName = title
         self.video_title.setText(title)
         # print(video_id)
 
@@ -190,12 +193,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def getBestVideo(self, quality=1080):
         bestQ = -1
         bestQindex = -1        
-        # ResList = []
-        # fpsList = []
+
         for index in range(self.downloadOption.rowCount()):
+            tempMimeType = self.downloadOption.item(index, 1).text()
             tempRes = self.downloadOption.item(index, 2).text()
             tempFps = self.downloadOption.item(index, 3).text()
-            if tempFps == 'x' or tempRes == 'x':
+            print(tempMimeType)
+            if tempFps == 'x' or tempRes == 'x' or tempMimeType != 'video/mp4':
                 continue
 
             tempRes = tempRes.replace('p', '')

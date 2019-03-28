@@ -1,12 +1,12 @@
-import pafy
+# import pafy
 
-url = "https://www.youtube.com/watch?v=Z1IZYjUGxFk"
-video = pafy.new(url)
+# url = "https://www.youtube.com/watch?v=Z1IZYjUGxFk"
+# video = pafy.new(url)
 
-print(video)
+# print(video)
 
-# videodata = video.getbestaudio()
-audiodata = video.getbestaudio()
+# # videodata = video.getbestaudio()
+# audiodata = video.getbestaudio()
 
-# videodata.download()
-audiodata.download()
+# # videodata.download()
+# audiodata.download()
