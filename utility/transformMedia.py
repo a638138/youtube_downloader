@@ -28,7 +28,7 @@ class transformMediaThread(QThread):
         self.transform_finish_trigger.emit()
 
 def mergeVideoAudio():
-
+    ffmpeg = '.\\ffmpeg\\bin\\ffmpeg'
     file_path = '.\\temp\\'
     output_path = '.\\output\\'
     audio = str([os.path.basename(x) for x in glob.glob(".\\temp\\Audio.*")][0])
@@ -36,9 +36,9 @@ def mergeVideoAudio():
     filetered_file_name = setting.fileName
     filetered_file_name = re.sub(r'[\/:*?"<>|]', ' ', filetered_file_name)
 
-    cmd = 'ffmpeg -i \"{file_path}{audio_fileName}\" -i \"{file_path}{video_fileName}\" \
+    cmd = '{ffmpeg} -i \"{file_path}{audio_fileName}\" -i \"{file_path}{video_fileName}\" \
            -map 0:a  -map 1:v -c:v copy -c:a ac3 -b:a 320K {output_path}\\\"{output_fileName}.mp4\"' \
-           .format(file_path=file_path, audio_fileName=audio, video_fileName=video, output_path=output_path, 
+           .format(ffmpeg=ffmpeg, file_path=file_path, audio_fileName=audio, video_fileName=video, output_path=output_path, 
                    output_fileName=filetered_file_name)
 
     p = Popen(cmd)
