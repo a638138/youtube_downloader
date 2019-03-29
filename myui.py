@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'youtube.ui'
 #
-# Created by: PyQt5 UI code generator 5.9.2
+# Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(418, 866)
+        MainWindow.resize(418, 850)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -133,6 +133,11 @@ class Ui_MainWindow(object):
         self.info.setSizePolicy(sizePolicy)
         self.info.setObjectName("info")
         self.verticalLayout.addWidget(self.info)
+        self.version_info = QtWidgets.QLabel(self.centralwidget)
+        self.version_info.setEnabled(False)
+        self.version_info.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.version_info.setObjectName("version_info")
+        self.verticalLayout.addWidget(self.version_info)
         self.verticalLayout.setStretch(0, 1)
         self.verticalLayout.setStretch(1, 2)
         self.verticalLayout.setStretch(2, 5)
@@ -159,5 +164,6 @@ class Ui_MainWindow(object):
         self.input_btn.setText(_translate("MainWindow", "輸入"))
         self.mp4_btn.setText(_translate("MainWindow", "Download MP4"))
         self.mp3_btn.setText(_translate("MainWindow", "Download MP3"))
+        self.version_info.setText(_translate("MainWindow", "version 1.0"))
 
 from PyQt5 import QtWebEngineWidgets

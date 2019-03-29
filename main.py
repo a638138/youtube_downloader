@@ -1,3 +1,5 @@
+# 可以用pyinstaller -F -w main.py 輸出exe
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidget, QTableWidgetItem, QTextBrowser
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEngineSettings
@@ -42,7 +44,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             self.startParseLink(link, self.yt)
             self.openAllGUI()
         except:
-            self.info.setText('請檢查網路連線，並確認Youtube網址輸入正確')
+            self.info.setText('請檢查網路連線並確認Youtube網址輸入正確')
             print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
             return
 
@@ -121,7 +123,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         lastFile = [os.path.basename(x) for x in glob.glob(".\\temp\\*")]
         for name in lastFile:
             os.remove('.\\temp\\{file_name}'.format(file_name=name))
-
+        self.closeAllGUI()
         self.twoPart = True
         self.isDownloadMp3 = True
         # 下載first的影片，並從中copy其音源
@@ -165,6 +167,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.isDownloadMp4 = False
         setting.isNeedTransform = False
         self.info.append('完成轉檔')
+        self.info.append('輸出檔案位於output資料夾中')
         self.twoPart = False
         self.openAllGUI()
         
