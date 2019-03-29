@@ -37,7 +37,7 @@ class Download_thread(QThread):
             outputPath = '.\\temp'
             setting.isNeedTransform = True
 
-        else:
+        elif self.dataType == 2:
             file_name = self.stream.default_filename
             outputPath = '.\\output'
 

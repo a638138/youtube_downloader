@@ -20,9 +20,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.twoPart = False
         self.setupUi(self)
         self.openAllGUI()
+        self.isDownloadMp3 = False
+        self.isDownloadMp4 = False
         self.mp4_btn.setEnabled(False)
         self.mp3_btn.setEnabled(False)
         self.mp4_btn.clicked.connect(self.download_mp4)
+        self.mp3_btn.clicked.connect(self.download_mp3)
         self.input_btn.clicked.connect(self.inputClick)
         self.downloadOption.itemDoubleClicked.connect(self.tbDoubleClicked)
         self.downloadOption.setHorizontalHeaderLabels(['itag', 'mime_type', 'res', 'fps', 'vcodec', 'acodec', 'abr'])
@@ -75,7 +78,8 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         lastFile = [os.path.basename(x) for x in glob.glob(".\\temp\\*")]
         for name in lastFile:
             os.remove('.\\temp\\{file_name}'.format(file_name=name))
-    
+
+        self.isDownloadMp4 = True
         self.closeAllGUI()
         # sldownloadOption
         bestVideo = self.getBestVideo(quality=1080)
@@ -112,6 +116,25 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         print(audioStream, videoStream)
 
+    def download_mp3(self):
+        # 清除上次的暫存檔
+        lastFile = [os.path.basename(x) for x in glob.glob(".\\temp\\*")]
+        for name in lastFile:
+            os.remove('.\\temp\\{file_name}'.format(file_name=name))
+
+        self.twoPart = True
+        self.isDownloadMp3 = True
+        # 下載first的影片，並從中copy其音源
+        audioStream = self.yt.streams.first()
+        self.audio_thread = Download_thread(audioStream, 1)
+        self.audio_thread.download_finish.connect(self.download_done)
+        self.audio_thread.set_value.connect(self.set_progress)
+        self.audio_thread.show_download_info.connect(self.show_download_infof)
+        # stream.download()
+        self.audio_thread.start()
+
+        
+
     def set_progress(self, data):
         self.progressBar.setValue(data)
 
@@ -125,13 +148,21 @@ class MyWindow(QMainWindow, Ui_MainWindow):
 
         if setting.isNeedTransform == True:
             self.closeAllGUI()
-            self.transform_thread = transformMediaThread()
+            # 轉檔為0則輸出mp3
+            # 轉檔為1則輸出mp4
+            if self.isDownloadMp3 == True:
+                transformMode = 0
+            elif self.isDownloadMp4 == True:
+                transformMode = 1
+            self.transform_thread = transformMediaThread(transformMode)
             self.transform_thread.transform_finish_trigger.connect(self.transform_finish)
             self.transform_thread.transform_progress.connect(self.set_progress)
             self.transform_thread.start()
             self.info.append('正在轉檔...')
 
     def transform_finish(self):
+        self.isDownloadMp3 = False
+        self.isDownloadMp4 = False
         setting.isNeedTransform = False
         self.info.append('完成轉檔')
         self.twoPart = False
