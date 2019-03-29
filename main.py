@@ -22,6 +22,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.twoPart = False
         self.setupUi(self)
         self.openAllGUI()
+        ####
+        # 使介面簡單點
+        self.downloadOption.setVisible(False)
+        ####
         self.isDownloadMp3 = False
         self.isDownloadMp4 = False
         self.mp4_btn.setEnabled(False)
