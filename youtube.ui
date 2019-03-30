@@ -197,8 +197,8 @@
       </property>
       <property name="font">
        <font>
-        <family>Tahoma</family>
-        <pointsize>12</pointsize>
+        <family>微軟正黑體</family>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">
@@ -216,8 +216,8 @@
       </property>
       <property name="font">
        <font>
-        <family>Tahoma</family>
-        <pointsize>12</pointsize>
+        <family>微軟正黑體</family>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">
@@ -268,7 +268,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>29</height>
     </rect>
    </property>
   </widget>

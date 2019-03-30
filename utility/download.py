@@ -1,6 +1,6 @@
 from PyQt5.QtCore import QThread, pyqtSignal
 from pytube import YouTube, Stream
-import setting
+import globalVariable
 
 class Download_thread(QThread):
 
@@ -19,10 +19,10 @@ class Download_thread(QThread):
     def run(self):
         outputPath = str()
 
-        while setting.isDownloading:
+        while globalVariable.isDownloading:
             continue
 
-        setting.isDownloading = True
+        globalVariable.isDownloading = True
 
         # 設定檔案名稱
         # 0為純影片
@@ -35,7 +35,7 @@ class Download_thread(QThread):
         elif self.dataType == 1:
             file_name = 'Audio'
             outputPath = '.\\temp'
-            setting.isNeedTransform = True
+            globalVariable.isNeedTransform = True
 
         elif self.dataType == 2:
             file_name = self.stream.default_filename

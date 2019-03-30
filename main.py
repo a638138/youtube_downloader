@@ -8,15 +8,16 @@ from myui import Ui_MainWindow
 from pytube import YouTube, Stream
 from utility.download import Download_thread
 from utility.transformMedia import transformMediaThread
-import setting
+import globalVariable
 import threading
 import urllib
 import glob
 import sys, os
+import winsound
 
 class MyWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
-        setting.init()
+        globalVariable.init()
         super(MyWindow, self).__init__(parent)
         self.yt = None
         self.twoPart = False
@@ -139,20 +140,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # stream.download()
         self.audio_thread.start()
 
-        
-
     def set_progress(self, data):
         self.progressBar.setValue(data)
 
     def download_done(self):
 
-        setting.isDownloading = False
+        globalVariable.isDownloading = False
         # 如果為使用者從表單下載則開啟gui後Return
         if not self.twoPart:
             self.openAllGUI()
             return
 
-        if setting.isNeedTransform == True:
+        if globalVariable.isNeedTransform == True:
             self.closeAllGUI()
             # 轉檔為0則輸出mp3
             # 轉檔為1則輸出mp4
@@ -169,11 +168,14 @@ class MyWindow(QMainWindow, Ui_MainWindow):
     def transform_finish(self):
         self.isDownloadMp3 = False
         self.isDownloadMp4 = False
-        setting.isNeedTransform = False
+        globalVariable.isNeedTransform = False
+        # 提示已經轉檔完成
+        winsound.MessageBeep()
         self.info.append('完成轉檔')
         self.info.append('輸出檔案位於output資料夾中')
         self.twoPart = False
         self.openAllGUI()
+        
         
     def show_download_infof(self, stream, data_type):
         file_size = stream.filesize
@@ -200,7 +202,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         #         """.format(video_id)
         # self.preview.setHtml(htmlString, QUrl(baseUrl))
         title = yt.title
-        setting.fileName = title
+        media_length = yt.length
+        globalVariable.fileName = title
+        globalVariable.media_length = float(media_length)
         self.video_title.setText(title)
         # print(video_id)
 
