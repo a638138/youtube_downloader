@@ -164,6 +164,6 @@ class Ui_MainWindow(object):
         self.input_btn.setText(_translate("MainWindow", "輸入"))
         self.mp3_btn.setText(_translate("MainWindow", "Download MP3"))
         self.mp4_btn.setText(_translate("MainWindow", "Download MP4"))
-        self.version_info.setText(_translate("MainWindow", "version 1.1"))
+        self.version_info.setText(_translate("MainWindow", "version 1.2"))
 
 from PyQt5 import QtWebEngineWidgets

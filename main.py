@@ -94,16 +94,6 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         videoStream = self.yt.streams.get_by_itag(bestVideo)
         # print(audioStream, videoStream)
         self.twoPart = True
-        # # 下載音樂
-        # 2019/03/28 速度太慢, 改從first的影片中抽取出audio
-        # audioStream = self.yt.streams.filter(only_audio=True).order_by('abr').last()
-        # self.audio_thread = Download_thread(audioStream)
-        # self.audio_thread.download_finish.connect(self.download_done)
-        # self.audio_thread.set_value.connect(self.set_progress)
-        # self.audio_thread.show_download_info.connect(self.show_download_infof)
-        # # stream.download()
-        # self.audio_thread.start()
-        # # self.my_thread.wait()
 
         # 下載影片
         self.video_thread = Download_thread(videoStream, 0)
@@ -113,13 +103,25 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # stream.download()
         self.video_thread.start()
 
-        # 下載first的影片，並從中copy其音源
+        # # 下載音樂
+        # 2019/03/28 速度太慢, 改從first的影片中抽取出audio
+        # 2019/07/29 音質為主
+        audioStream = self.yt.streams.filter(only_audio=True).order_by('abr').last()
         self.audio_thread = Download_thread(audioStream, 1)
         self.audio_thread.download_finish.connect(self.download_done)
         self.audio_thread.set_value.connect(self.set_progress)
         self.audio_thread.show_download_info.connect(self.show_download_infof)
         # stream.download()
         self.audio_thread.start()
+        
+        # # self.my_thread.wait()
+        # # 下載first的影片，並從中copy其音源
+        # self.audio_thread = Download_thread(audioStream, 1)
+        # self.audio_thread.download_finish.connect(self.download_done)
+        # self.audio_thread.set_value.connect(self.set_progress)
+        # self.audio_thread.show_download_info.connect(self.show_download_infof)
+        # # stream.download()
+        # self.audio_thread.start()
 
         print(audioStream, videoStream)
 
@@ -132,11 +134,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.twoPart = True
         self.isDownloadMp3 = True
         # 下載first的影片，並從中copy其音源
-        audioStream = self.yt.streams.first()
+        # audioStream = self.yt.streams.first()
+        # self.audio_thread = Download_thread(audioStream, 1)
+        # self.audio_thread.download_finish.connect(self.download_done)
+        # self.audio_thread.set_value.connect(self.set_progress)
+        # self.audio_thread.show_download_info.connect(self.show_download_infof)
+
+        audioStream = self.yt.streams.filter(only_audio=True).order_by('abr').last()
         self.audio_thread = Download_thread(audioStream, 1)
         self.audio_thread.download_finish.connect(self.download_done)
         self.audio_thread.set_value.connect(self.set_progress)
         self.audio_thread.show_download_info.connect(self.show_download_infof)
+
         # stream.download()
         self.audio_thread.start()
 
