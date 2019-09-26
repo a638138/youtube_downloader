@@ -43,15 +43,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         while(self.downloadOption.rowCount() > 0):
             self.downloadOption.removeRow(0)
         link = self.input.toPlainText()
-        try:
-            self.yt = YouTube(link, on_progress_callback=self.progress_Check)
-            self.closeAllGUI()
-            self.startParseLink(link, self.yt)
-            self.openAllGUI()
-        except:
-            self.info.setText('請檢查網路連線並確認Youtube網址輸入正確')
-            print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
-            return
+        # try:
+        self.yt = YouTube(link, on_progress_callback=self.progress_Check)
+        self.closeAllGUI()
+        self.startParseLink(link, self.yt)
+        self.openAllGUI()
+        # except:
+        #     self.info.setText('請檢查網路連線並確認Youtube網址輸入正確')
+        #     print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
+        #     return
 
 
 
