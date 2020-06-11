@@ -22,7 +22,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.yt = None
         self.twoPart = False
         self.setupUi(self)
-        self.openAllGUI()
+        self.open_all_GUI()
         ####
         # 使介面簡單點
         self.downloadOption.setVisible(False)
@@ -34,7 +34,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.mp4_btn.clicked.connect(self.download_mp4)
         self.mp3_btn.clicked.connect(self.download_mp3)
         self.input_btn.clicked.connect(self.inputClick)
-        self.downloadOption.itemDoubleClicked.connect(self.tbDoubleClicked)
+        self.downloadOption.itemDoubleClicked.connect(self.tb_double_clicked)
         self.downloadOption.setHorizontalHeaderLabels(['itag', 'mime_type', 'res', 'fps', 'vcodec', 'acodec', 'abr'])
         self.downloadOption.setEditTriggers(QTableWidget.NoEditTriggers)
 
@@ -43,20 +43,18 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         while(self.downloadOption.rowCount() > 0):
             self.downloadOption.removeRow(0)
         link = self.input.toPlainText()
-        # try:
-        self.yt = YouTube(link, on_progress_callback=self.progress_Check)
-        self.closeAllGUI()
-        self.startParseLink(link, self.yt)
-        self.openAllGUI()
-        # except:
-        #     self.info.setText('請檢查網路連線並確認Youtube網址輸入正確')
-        #     print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
-        #     return
+        try:
+            self.yt = YouTube(link, on_progress_callback=self.progress_check)
+            self.close_all_GUI()
+            self.start_parse_link(link, self.yt)
+            self.open_all_GUI()
+        except:
+            self.info.setText('請檢查網路連線並確認Youtube網址輸入正確')
+            print("ERROR. Check your:\n  -connection\n  -url is a YouTube url\n\nTry again.")
+            # return
 
-
-
-    def tbDoubleClicked(self, mi):
-        self.closeAllGUI()
+    def tb_double_clicked(self, mi):
+        self.close_all_GUI()
         download_tag = self.downloadOption.item(mi.row(), 0).text()
         # print(download_tag)
         stream = self.yt.streams.get_by_itag(download_tag)
@@ -65,15 +63,15 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.my_thread = Download_thread(stream, 2)
         self.my_thread.download_finish.connect(self.download_done)
         self.my_thread.set_value.connect(self.set_progress)
-        self.my_thread.show_download_info.connect(self.show_download_infof)
+        self.my_thread.show_download_info.connect(self.show_download_info)
         # stream.download()
         self.my_thread.start()
 
-    def progress_Check(self, stream = None, chunk = None, file_handle = None, remaining = None):
+    def progress_check(self, stream = None, chunk = None, bytes_remaining = None):
         # Gets the percentage of the file that has been downloaded.
         # print(stream, file_size)
         file_size = stream.filesize
-        percent = (100*(file_size-remaining))/file_size
+        percent = (100*(file_size-bytes_remaining))/file_size
         now_thread = QThread.currentThread()
         now_thread.set_value.emit(percent)
         # print(percent)
@@ -87,9 +85,9 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             os.remove('.\\temp\\{file_name}'.format(file_name=name))
 
         self.isDownloadMp4 = True
-        self.closeAllGUI()
+        self.close_all_GUI()
         # sldownloadOption
-        bestVideo = self.getBestVideo(quality=1080)
+        bestVideo = self.get_best_video(quality=1080)
         audioStream = self.yt.streams.first()
         videoStream = self.yt.streams.get_by_itag(bestVideo)
         # print(audioStream, videoStream)
@@ -99,7 +97,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.video_thread = Download_thread(videoStream, 0)
         self.video_thread.download_finish.connect(self.download_done)
         self.video_thread.set_value.connect(self.set_progress)
-        self.video_thread.show_download_info.connect(self.show_download_infof)
+        self.video_thread.show_download_info.connect(self.show_download_info)
         # stream.download()
         self.video_thread.start()
 
@@ -110,7 +108,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.audio_thread = Download_thread(audioStream, 1)
         self.audio_thread.download_finish.connect(self.download_done)
         self.audio_thread.set_value.connect(self.set_progress)
-        self.audio_thread.show_download_info.connect(self.show_download_infof)
+        self.audio_thread.show_download_info.connect(self.show_download_info)
         # stream.download()
         self.audio_thread.start()
         
@@ -119,18 +117,17 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # self.audio_thread = Download_thread(audioStream, 1)
         # self.audio_thread.download_finish.connect(self.download_done)
         # self.audio_thread.set_value.connect(self.set_progress)
-        # self.audio_thread.show_download_info.connect(self.show_download_infof)
+        # self.audio_thread.show_download_info.connect(self.show_download_info)
         # # stream.download()
         # self.audio_thread.start()
 
-        print(audioStream, videoStream)
 
     def download_mp3(self):
         # 清除上次的暫存檔
         lastFile = [os.path.basename(x) for x in glob.glob(".\\temp\\*")]
         for name in lastFile:
             os.remove('.\\temp\\{file_name}'.format(file_name=name))
-        self.closeAllGUI()
+        self.close_all_GUI()
         self.twoPart = True
         self.isDownloadMp3 = True
         # 下載first的影片，並從中copy其音源
@@ -138,13 +135,13 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         # self.audio_thread = Download_thread(audioStream, 1)
         # self.audio_thread.download_finish.connect(self.download_done)
         # self.audio_thread.set_value.connect(self.set_progress)
-        # self.audio_thread.show_download_info.connect(self.show_download_infof)
+        # self.audio_thread.show_download_info.connect(self.show_download_info)
 
         audioStream = self.yt.streams.filter(only_audio=True).order_by('abr').last()
         self.audio_thread = Download_thread(audioStream, 1)
         self.audio_thread.download_finish.connect(self.download_done)
         self.audio_thread.set_value.connect(self.set_progress)
-        self.audio_thread.show_download_info.connect(self.show_download_infof)
+        self.audio_thread.show_download_info.connect(self.show_download_info)
 
         # stream.download()
         self.audio_thread.start()
@@ -157,11 +154,11 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         globalVariable.isDownloading = False
         # 如果為使用者從表單下載則開啟gui後Return
         if not self.twoPart:
-            self.openAllGUI()
+            self.open_all_GUI()
             return
 
         if globalVariable.isNeedTransform == True:
-            self.closeAllGUI()
+            self.close_all_GUI()
             # 轉檔為0則輸出mp3
             # 轉檔為1則輸出mp4
             if self.isDownloadMp3 == True:
@@ -183,10 +180,10 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         self.info.append('完成轉檔')
         self.info.append('輸出檔案位於output資料夾中')
         self.twoPart = False
-        self.openAllGUI()
+        self.open_all_GUI()
         
         
-    def show_download_infof(self, stream, data_type):
+    def show_download_info(self, stream, data_type):
         file_size = stream.filesize
         data_name = str()
         # 0為純影片
@@ -200,16 +197,12 @@ class MyWindow(QMainWindow, Ui_MainWindow):
             data_name = stream.default_filename
         self.info.append('正在下載{}，檔案大小:{:.2f}MB'.format(data_name, file_size/(1024*1024)))
 
-    def startParseLink(self, link, yt):
-        video_id = getVideoId(link)
+    def start_parse_link(self, link, yt):
+        video_id = get_video_id(link)
         self.preview.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         self.preview.page().fullScreenRequested.connect(lambda request: request.accept())
         baseUrl = "local"
         self.preview.setUrl(QUrl("https://www.youtube.com/embed/{}".format(video_id)))
-        # htmlString = """
-        #     <iframe width="270" height="170" src="https://www.youtube.com/embed/{}?rel=0&amp;showinfo=0" encrypted-media; frameborder="0"</iframe>
-        #         """.format(video_id)
-        # self.preview.setHtml(htmlString, QUrl(baseUrl))
         title = yt.title
         media_length = yt.length
         globalVariable.fileName = title
@@ -221,33 +214,29 @@ class MyWindow(QMainWindow, Ui_MainWindow):
         allmetaData = list()
         allstream = yt.streams.all()
         for stream in allstream:
-            allmetaData.append(extractTag(stream))
+            allmetaData.append(extract_tag(stream))
         
         for index, data in zip(range(len(allmetaData)), allmetaData):
-            # print(index)
             self.downloadOption.insertRow(index)
-            # for dtype, _data in zip(data.keys(), data.values()):
-            #     print(dtype, _data)
             for x, _data in zip(range(len(data.keys())), data.values()):
-                # print(x, _data)
                 if str(_data) == 'None':
                     _data = 'x'
                 item = QTableWidgetItem(str(_data))
                 self.downloadOption.setItem(index, x, item)
 
-    def closeAllGUI(self):
+    def close_all_GUI(self):
         self.downloadOption.setEnabled(False)
         self.mp4_btn.setEnabled(False)
         self.mp3_btn.setEnabled(False)
         self.input_btn.setEnabled(False)
 
-    def openAllGUI(self):
+    def open_all_GUI(self):
         self.downloadOption.setEnabled(True)
         self.mp4_btn.setEnabled(True)
         self.mp3_btn.setEnabled(True)
         self.input_btn.setEnabled(True)
 
-    def getBestVideo(self, quality=1080):
+    def get_best_video(self, quality=1080):
         bestQ = -1
         bestQindex = -1        
 
@@ -269,7 +258,7 @@ class MyWindow(QMainWindow, Ui_MainWindow):
                 bestQ = tempBestQ
         return self.downloadOption.item(bestQindex, 0).text()
 
-def getVideoId(link):
+def get_video_id(link):
     counter = 0
     for i in link[link.find('v=')+2:]:
         if i != '&':
@@ -278,7 +267,7 @@ def getVideoId(link):
             break
     return link[link.find('v=')+2:link.find('v=')+2+counter]
 
-def extractTag(stream):
+def extract_tag(stream):
     # itag mime_type res fps vcodec acodec
     temp = stream
     data = {'itag':None, 'mime_type':None, 'res':None, 'fps':None,\
